@@ -15,19 +15,19 @@
         "src/pages/index.astro"
       ],
       "fingerprints": {
-        ".superdesign/design-system.md": "a65d4c838892652df34f0e5e997006881a435d71e398461017f56e675347353b",
+        ".superdesign/design-system.md": "e1cb590e7b5bccbdb46ea642129ab3f0f3279d2100bb9fcc67670d2ea4de7262",
         ".superdesign/init/theme.md": "f8f7291e6c55b983a3c19ec3ee144d1dc0dc2aee8c6cc9460e459077fe0e4a9c",
-        "src/pages/index.astro": "fa44a8899dcaa4b9931f823a0c403b1f19f3c1f8db083204cdba99c861671084"
+        "src/pages/index.astro": "7caeae60e97599ace93af62d3affec6fbceff0ddbe0ec333fae2bfc7c93dbecc"
       },
       "components": [],
       "drafts": {
         "45c2fa4f-35e1-47cb-a7e4-6e060a21d545": {
-          "title": "Nugraha Portfolio — Editorial Backend",
-          "visualDirection": "warm editorial portfolio with technical backend-system motifs",
-          "currentVersion": 1
+          "title": "Nugraha Portfolio — Backend Control Plane",
+          "visualDirection": "interactive backend control plane combining CLI, API explorer, demo telemetry, product system map, and career log",
+          "currentVersion": 3
         }
       },
-      "updatedAt": "2026-11-09T20:13:00+07:00"
+      "updatedAt": "2026-11-09T22:35:00+07:00"
     }
   }
 }

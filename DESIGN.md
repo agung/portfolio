@@ -1,10 +1,12 @@
 # Design direction
 
-- Audience: hiring teams looking for a software engineer with a backend focus.
-- Character: personal, direct, and technically minded, with a more substantial system interface presence.
-- Palette: cream `#F3EEE3`, ink `#111111`, and orange `#D9541E` for focused emphasis. Dark mode reverses cream and ink.
-- Type: use an 18px body size and a stronger scale for headings, navigation, skills, and project descriptions. Reddit Sans keeps Indonesian copy easy to scan. JetBrains Mono marks the `nugraha@dev:~$` wordmark, file labels, code, and compact section metadata.
-- Composition: a strong two-column introduction, prominent skill tokens, a product list, named project records, a three-period career timeline, and a direct contact block. Keep section spacing compact and use varied content instead of decorative separators.
-- Motion: ENERGY 2 / RHYTHM 3 / MOTION 2. The introduction is the focal point, section layouts vary, and motion is limited to short entrance and hover transitions. No perpetual animation.
-- Code motif: `profile.json` shows a real profile summary in syntax color. It avoids fake shell controls and commands.
-- Content policy: project names, product names, job titles, and dates are supplied by Nugraha. No project impact or training outcomes are inferred. The contact email remains a visible placeholder until a real address is supplied. Training at Kawan Lama is listed as an additional contribution within career experience.
+- Audience: engineering leaders and recruiters looking for a backend-focused software engineer.
+- Concept: a personal backend control plane. A functional CLI opens the portfolio; API explorer, telemetry, system map, and career log are connected working views.
+- Character: direct, technical, operational, and warm. It should feel like a tool Nugraha built for his own work rather than a themed landing page.
+- Palette: cream `#F3EEE3`, ink `#111111`, and orange `#D9541E`. Orange marks focus and active state. Dark mode reverses cream and ink.
+- Type: Reddit Sans for readable prose and headings. JetBrains Mono for `nugraha@dev:~$`, commands, JSON, endpoints, timestamps, and system nodes.
+- Composition: a dense control surface with a compact mode rail and one primary work area. API rows, one monitoring chart, a node map, and a log timeline vary the rhythm without section separators.
+- Motion: ENERGY 3 / RHYTHM 4 / MOTION 2. Short state transitions and a focus-only cursor blink. No perpetual telemetry animation.
+- Function: CLI autocomplete/history, runnable API examples, selectable architecture nodes, theme toggle, and keyboard access must work.
+- Evidence: monitoring is visibly labeled demo until real analytics exist. System architecture and incident details never imply unsupplied production facts.
+- Content policy: use only Nugraha's supplied products, projects, integrations, job history, and Kawan Lama training. The contact email remains a visible placeholder.

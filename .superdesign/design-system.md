@@ -1,79 +1,65 @@
-# Agung Nugraha Portfolio — Design System
+# Agung Nugraha Portfolio — Backend Control Plane
 
 ## Product and audience
 
-A one-page personal portfolio for Agung “Nugraha” Nugraha, a software engineer who specializes in backend engineering and can also work across the frontend. The primary audience is engineering leaders, recruiters, founders, and potential collaborators. The page should quickly establish technical credibility, show selected work, explain working style, and provide a clear contact path.
+A one-page personal portfolio for Agung “Nugraha” Nugraha, a backend-focused software engineer. The primary audience is engineering leaders and recruiters. The interface should demonstrate how Nugraha thinks about systems while keeping every portfolio section readable for non-engineering visitors.
 
-## Narrative structure
+## Core concept
 
-1. Compact top navigation with wordmark, section links, and a high-contrast contact action.
-2. Hero with a strong backend-focused statement, concise introduction, primary contact CTA, secondary projects CTA, and an editorial technical visual.
-3. Capability strip that names the core practice areas without unverified metrics or client logos.
-4. Selected work with three clearly labeled illustrative projects using dummy content.
-5. Expertise section covering backend systems, API design, infrastructure, and practical frontend delivery.
-6. Short experience timeline using clearly labeled placeholder roles and dates.
-7. Personal working philosophy and a concise call to collaborate.
-8. Footer with placeholder email and social links clearly presented as temporary content.
+Treat the portfolio as a backend control plane with five connected modes:
+
+1. A real interactive CLI is the entry point. Commands such as `whoami`, `ls projects/`, `cat experience.log`, `curl /skills`, and `help` return portfolio content. It supports autocomplete, history, clickable command suggestions, and a reset action.
+2. An API explorer presents `GET /about`, `GET /skills`, `GET /projects`, `GET /experience`, and `POST /contact`. “Try it out” returns readable JSON from the actual page data.
+3. A monitoring view visualizes only honest portfolio telemetry. Until real analytics are connected, charts and health values must visibly say `demo telemetry` and must not imply production measurements.
+4. A system map uses the supplied products and integrations as an editable concept map. It may show OMS, PIM, Marketplace Adapter, Shopee, TikTok, Lazada, Blibli, and Shopify, but must not invent an employer architecture or technical decision.
+5. A career log shows the supplied employment timeline and Kawan Lama training. Incident or postmortem entries remain empty or clearly marked “detail needed” until Nugraha provides a real problem, root cause, fix, and result.
 
 ## Visual direction
 
-Use the attached editorial landing-page reference only for composition cues: confident oversized type, a two-column hero, a layered rounded visual panel, thin rules, compact navigation, and orange as a controlled highlight. Do not copy its brand, logo, claims, UI cards, or exact layout. The portfolio must feel original, technical, warm, and quietly confident.
+The page feels like a serious operations interface rendered on warm paper. The command line is actual navigation and returns real content. Use a dense but calm desktop layout with a narrow command rail and a large work surface. On mobile, the rail becomes a horizontal mode switch and every panel becomes a single readable column.
 
 ## Color tokens
 
-- Canvas / background: `#F3EEE3`
-- Primary text and dark surfaces: `#111111`
-- Accent and interactive emphasis: `#D9541E`
-- Soft paper surface: `#FAF7F0`
-- Muted text: `#676158`
-- Hairline border: `rgba(17, 17, 17, 0.16)`
-- Dark-surface text: `#F3EEE3`
+- Canvas: `#F3EEE3`
+- Primary ink and dark console: `#111111`
+- Accent and active state: `#D9541E`
+- Paper surface: `#FAF7F0`
+- Muted text: `#686158`
+- Hairline: `rgba(17, 17, 17, 0.18)`
+- Console text: `#F3EEE3`
 
-Do not introduce purple, blue, neon colors, or gradients. Orange must stay selective rather than becoming the dominant background.
+No gradients, glow, neon, or multi-color status palette. Orange marks the selected mode, cursor, request method, and focus.
 
 ## Typography
 
-- Primary sans-serif: `Inter`, with `Arial` and `sans-serif` fallbacks.
-- Editorial italic accent: `Georgia`, `Times New Roman`, serif.
-- Display headings: bold, compact tracking, responsive scale, short line lengths.
-- Body copy: comfortable 1.55–1.7 line height and no smaller than 16px on desktop.
-- Use the serif only for a few italic words or short phrases, never for long body copy.
+- Reddit Sans for headings and prose because it stays approachable at dashboard density.
+- JetBrains Mono for the wordmark, CLI, endpoint paths, JSON, timestamps, node labels, and compact metadata.
+- Body size starts at 17–18px. Interface metadata must remain at least 12px and high contrast.
+- Large title text is compact, direct, and never styled as generic terminal ASCII art.
 
 ## Layout and components
 
-- Maximum content width: approximately 1240px with responsive page gutters.
-- Desktop hero: asymmetric two-column composition; text slightly wider than visual.
-- Mobile: single column, navigation collapses cleanly, and all cards remain legible without horizontal scrolling.
-- Corners: 18–28px for major panels; pill radius for badges and actions.
-- Borders: mostly 1px dark translucent rules.
-- Shadows: subtle and warm; avoid glossy floating-card effects.
-- Buttons: rounded pills with strong labels; primary uses accent fill, secondary uses transparent background and dark border.
-- Project cards: distinct compositions and numbers, not a repetitive generic card grid.
-
-## Technical visual language
-
-The hero visual should communicate backend engineering without stock photography. Use an art-directed dark panel containing restrained terminal/API/system-diagram motifs, small status labels, monospaced details, and an orange offset layer. Keep code snippets short and decorative rather than pretending to be a real production system.
-
-## Motion
-
-- Subtle entrance transitions and hover movement only.
-- Respect `prefers-reduced-motion`.
-- No scroll hijacking, parallax, autoplay video, or distracting cursor effects.
-
-## Accessibility and behavior
-
-- Semantic landmarks and heading hierarchy.
-- Visible keyboard focus states using the accent color.
-- Sufficient contrast on all text and controls.
-- Anchor navigation should account for the sticky header.
-- External placeholder links must be easy to replace later.
+- Sticky top bar with `nugraha@dev:~$`, open-to-work state, section shortcuts, theme control, and contact action.
+- Intro uses a bold statement beside a functional command console.
+- Main control plane uses an asymmetric split: command/mode rail plus changing content surface.
+- API rows are expandable records, not repeated cards.
+- Monitoring uses one primary chart and a compact health table. Every demo value carries a visible `demo` label.
+- System map uses explicit connector lines and selectable nodes. A detail drawer explains only supplied facts or a visible request for missing detail.
+- Career log uses timestamps and severity-style labels as structure. It must not turn job changes into fake incidents.
+- Corners stay small, between 0 and 8px. Panels use rules and background contrast instead of shadows.
 
 ## Content constraints
 
-- Use the name “Agung Nugraha” and preferred name “Nugraha.”
-- Positioning: software engineer focused on backend engineering, with practical frontend capability.
-- Do not invent employers, client names, testimonials, user counts, revenue, or performance statistics.
-- Dummy projects and experience must be visibly labeled as illustrative or placeholder content.
-- Suggested hero copy: “Backend systems built to stay reliable.”
-- Suggested introduction: “I’m Nugraha, a software engineer focused on APIs, services, and infrastructure—with enough frontend experience to bring the whole product together.”
+- Use only the supplied products, projects, roles, dates, companies, integrations, and Kawan Lama training.
+- Products: OMS, PIM, Affiliate, Journal, Marketplace Adapter, Belanjaku.
+- Projects: Hushpuppies, ACE & Informa for Kawan Lama Group, and OMS support.
+- Experience: 2019–2020 Junior Backend Engineer at ICUBE; 2020–2025 Software Engineer at iCube by SIRCLO; 2025–present Software Engineer at ICUBE.
+- Never invent uptime, latency, request volume, incident details, architecture decisions, results, testimonials, or project metrics.
+- The contact email remains a visible placeholder until supplied.
 
+## Motion and behavior
+
+- The terminal cursor may blink only while its input is focused.
+- Mode changes use a short opacity/translate transition. No perpetual dashboard animation.
+- Every control works by keyboard, including terminal history, autocomplete, endpoint execution, node selection, theme switching, and mobile mode navigation.
+- Respect `prefers-reduced-motion`.
