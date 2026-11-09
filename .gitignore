@@ -17,6 +17,9 @@ pnpm-debug.log*
 .env
 .env.production
 
+# Superdesign temporary drafts
+.superdesign/tmp/
+
 # macOS-specific files
 .DS_Store
 

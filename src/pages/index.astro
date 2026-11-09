@@ -1,16 +1,342 @@
 ---
+const skillGroups = [
+	{ label: 'Backend', items: ['PHP', 'Golang', 'REST API', 'MySQL'] },
+	{ label: 'Tools & workflow', items: ['Git', 'JavaScript', 'TypeScript', 'Code review'] },
+	{ label: 'Frontend', items: ['HTML', 'CSS', 'React'] },
+];
+
+const products = [
+	{ name: 'OMS', detail: 'Omnichannel Management System' },
+	{ name: 'PIM', detail: 'Product Information Management' },
+	{ name: 'Affiliate', detail: '' },
+	{ name: 'Journal', detail: '' },
+	{ name: 'Belanjaku', detail: '' },
+	{ name: 'Marketplace Adapter', detail: 'Shopee, TikTok, Lazada, Blibli, Shopify', wide: true },
+];
+
+const projects = [
+	{ name: 'Hushpuppies', label: 'Proyek klien' },
+	{ name: 'ACE & Informa', label: 'Kawan Lama Group' },
+	{ name: 'OMS', label: 'Dukungan proyek' },
+];
+
+const experience = [
+	{ period: '2019 - 2020', role: 'Junior Backend Engineer', company: 'ICUBE' },
+	{ period: '2020 - 2025', role: 'Software Engineer', company: 'iCube by SIRCLO' },
+	{ period: '2025 - Sekarang', role: 'Software Engineer', company: 'ICUBE' },
+];
 ---
 
-<html lang="en">
+<!doctype html>
+<html lang="id">
 	<head>
-		<meta charset="utf-8" />
+		<meta charset="UTF-8" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
+		<meta name="theme-color" content="#F3EEE3" />
+		<meta name="description" content="Agung Nugraha, software engineer yang berfokus pada backend dan terbuka untuk peluang kerja." />
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Reddit+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+		<title>Agung Nugraha | Software Engineer</title>
+		<script is:inline>
+			try {
+				if (localStorage.getItem('nugraha-theme') === 'dark') {
+					document.documentElement.dataset.theme = 'dark';
+					document.querySelector('meta[name="theme-color"]')?.setAttribute('content', '#111111');
+				}
+			} catch {}
+		</script>
+		<style>
+			/* Cream and ink carry the page. Orange marks availability and active emphasis only. */
+			:root {
+				color-scheme: light;
+				--bg: #F3EEE3;
+				--text: #111111;
+				--muted: #5F584E;
+				--accent: #D9541E;
+				--accent-ink: #983B18;
+				--surface: #EAE4D8;
+				--panel: #111111;
+				--line: rgba(17, 17, 17, .18);
+				--mono: 'JetBrains Mono', 'SFMono-Regular', Consolas, monospace;
+				--sans: 'Reddit Sans', system-ui, sans-serif;
+				font-family: var(--sans);
+				font-synthesis: none;
+				text-rendering: optimizeLegibility;
+			}
+			:root[data-theme='dark'] {
+				color-scheme: dark;
+				--bg: #111111;
+				--text: #F3EEE3;
+				--muted: #C5BDB1;
+				--accent: #D9541E;
+				--accent-ink: #F28A60;
+				--surface: #1C1A17;
+				--panel: #211F1C;
+				--line: rgba(243, 238, 227, .2);
+			}
+			*, *::before, *::after { box-sizing: border-box; }
+			html { scroll-behavior: smooth; scroll-padding-top: 84px; }
+			body { margin: 0; overflow-x: hidden; background: var(--bg); color: var(--text); font: 400 18px/1.6 var(--sans); }
+			a { color: var(--accent-ink); text-decoration-thickness: .08em; text-underline-offset: .2em; }
+			a:hover { text-decoration: underline; }
+			a:active { color: var(--accent-ink); }
+			a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+			.wrap { width: min(1120px, calc(100% - 64px)); margin-inline: auto; }
+			.mono { font-family: var(--mono); }
+			nav { position: sticky; z-index: 10; top: 0; background: var(--bg); }
+			.nav-inner { min-height: 76px; display: flex; align-items: center; justify-content: space-between; gap: 28px; }
+			.logo { color: var(--text); font: 600 .92rem var(--mono); text-decoration: none; white-space: nowrap; }
+			.logo b { color: var(--accent-ink); font-weight: 600; }
+			.nav-links { display: flex; flex-wrap: wrap; gap: 24px; margin: 0; padding: 0; list-style: none; font-size: .94rem; }
+			.nav-links a { color: var(--muted); text-decoration: none; }
+			.nav-links a:hover { color: var(--text); }
+			.theme-toggle { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-width: 86px; min-height: 40px; padding: 0 12px; border: 1px solid var(--line); border-radius: 5px; background: transparent; color: var(--text); cursor: pointer; font: 500 .76rem var(--mono); transition: border-color .18s, background .18s, transform .18s; }
+			.theme-toggle:hover { border-color: var(--accent); background: var(--surface); }
+			.theme-toggle:active, .button:active { transform: translateY(1px); }
+			.theme-toggle-icon { width: 16px; height: 16px; display: inline-flex; flex: 0 0 16px; align-items: center; justify-content: center; color: var(--muted); line-height: 0; }
+			.theme-toggle-icon svg { display: block; }
+			.hero { min-height: 580px; display: grid; grid-template-columns: 1.1fr .9fr; align-items: center; gap: clamp(38px, 7vw, 94px); padding-block: 66px 104px; }
+			.hero-copy { animation: arrive .55s cubic-bezier(.2,.75,.25,1) both; }
+			.availability { display: flex; align-items: center; gap: 10px; margin: 0 0 28px; color: var(--accent-ink); font: 500 .8rem var(--mono); }
+			.availability-mark { width: 9px; height: 9px; flex: 0 0 9px; background: var(--accent); }
+			.eyebrow { margin: 0 0 13px; color: var(--muted); font: 500 .82rem var(--mono); }
+			h1, h2 { font-family: var(--sans); }
+			h1 { max-width: 15ch; margin: 0; font-size: clamp(3.8rem, 6.3vw, 5.7rem); font-weight: 700; line-height: .99; letter-spacing: -.075em; }
+			h1 span { color: var(--accent-ink); }
+			.lead { max-width: 47ch; margin: 25px 0 28px; color: var(--muted); font-size: 1.12rem; }
+			.hero-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 19px; }
+			.button { min-height: 50px; display: inline-flex; align-items: center; justify-content: center; padding: 0 19px; border: 1px solid var(--text); border-radius: 5px; background: var(--text); color: var(--bg); font-size: .94rem; font-weight: 650; text-decoration: none; transition: transform .18s, background .18s, color .18s; }
+			.button:hover { transform: translateY(-2px); border-color: var(--accent); background: var(--surface); color: var(--text); text-decoration: none; }
+			.text-link { font-size: .94rem; font-weight: 600; }
+			.profile-file { overflow: hidden; border: 1px solid var(--line); border-top: 3px solid var(--accent); background: var(--panel); color: #F3EEE3; animation: arrive .65s .1s cubic-bezier(.2,.75,.25,1) both; }
+			.file-head { min-height: 56px; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 0 20px; border-bottom: 1px solid rgba(243, 238, 227, .17); color: #C5BDB1; font: 400 .78rem var(--mono); }
+			.file-path { color: #F3EEE3; }
+			.file-path span { color: #F28A60; }
+			.file-type { color: #AAA49A; }
+			.code { margin: 0; padding: 22px 20px 25px; overflow: auto; font: 400 clamp(.78rem, 1vw, .9rem)/1.8 var(--mono); white-space: normal; }
+			.code-line { display: block; white-space: pre; }
+			.line-number { display: inline-block; width: 2.7em; color: #9B958A; user-select: none; }
+			.code-key { color: #F28A60; }
+			.code-value { color: #F3EEE3; }
+			.code-bool { color: #F28A60; }
+			/* The file row is the recurring system motif, while body copy stays in Reddit Sans. */
+			section { padding-block: 50px 34px; }
+			.section-head { display: grid; grid-template-columns: 190px 1fr; align-items: baseline; gap: 30px; margin-bottom: 28px; }
+			.section-index { margin: 0; color: var(--muted); font: 500 .8rem var(--mono); }
+			h2 { margin: 0; font-size: clamp(2rem, 4vw, 3rem); font-weight: 650; line-height: 1.15; letter-spacing: -.045em; }
+			.section-intro { max-width: 62ch; margin: 13px 0 0; color: var(--muted); font-size: 1rem; }
+			.about-layout { display: grid; grid-template-columns: 190px 1fr; gap: 30px; }
+			.about-layout .section-index { padding-top: 7px; }
+			.about-copy { max-width: 70ch; margin: 0; color: var(--muted); font-size: 1.12rem; }
+			.about-copy strong { color: var(--text); font-weight: 600; }
+			.skills { padding-top: 46px; padding-bottom: 32px; }
+			.skill-list { margin-left: 220px; }
+			.skill-row { display: grid; grid-template-columns: 180px 1fr; gap: 24px; align-items: center; padding-block: 20px; border-top: 1px solid var(--line); }
+			.skill-row:last-child { border-bottom: 1px solid var(--line); }
+			.skill-row h3 { margin: 0; font: 500 .82rem var(--mono); color: var(--muted); }
+			.skill-items { display: flex; flex-wrap: wrap; gap: 9px; }
+			.skill-items span { padding: 6px 10px; border: 1px solid var(--line); background: var(--surface); color: var(--text); font-size: 1rem; }
+			.project-list { display: grid; gap: 0; }
+			.project { display: grid; grid-template-columns: 170px 1fr; gap: 0 25px; align-items: start; padding: 26px 0; border-bottom: 1px solid var(--line); }
+			.project:first-child { grid-row: auto; min-height: 0; margin-bottom: 18px; padding: 27px; background: var(--panel); color: #F3EEE3; }
+			.project-kicker { grid-column: 1; grid-row: 1 / span 3; margin: 5px 0 0; color: var(--muted); font: 500 .76rem var(--mono); }
+			.project:first-child .project-kicker { color: #F28A60; }
+			.project h3 { grid-column: 2; margin: 0; font-size: 1.48rem; font-weight: 650; letter-spacing: -.03em; }
+			.project p { grid-column: 2; max-width: 54ch; margin: 9px 0 0; color: var(--muted); font-size: 1rem; }
+			.project:first-child p { color: #C5BDB1; }
+			.product-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 28px; margin: 18px 0 42px; }
+			.product-row { display: grid; grid-template-columns: minmax(95px, .42fr) 1fr; gap: 16px; align-items: baseline; padding: 17px 0; border-top: 1px solid var(--line); }
+			.product-row-wide { grid-column: 1 / -1; }
+			.product-row h3 { margin: 0; font: 500 .82rem var(--mono); }
+			.product-row p { margin: 0; color: var(--muted); font-size: 1rem; }
+			.career-list { display: grid; }
+			.career { display: grid; grid-template-columns: 190px 1fr; gap: 30px; }
+			.career-record { display: grid; grid-template-columns: minmax(130px, .34fr) 1fr; gap: 24px; padding-top: 20px; border-top: 1px solid var(--line); }
+			.career-period { margin: 2px 0 0; color: var(--muted); font: 500 .78rem/1.6 var(--mono); }
+			.career-record h3 { margin: 0; font-size: 1.2rem; font-weight: 650; }
+			.career-record p { margin: 7px 0 0; color: var(--muted); font-size: 1rem; }
+			.career-activity h3 { margin: 0; font-size: 1.2rem; font-weight: 650; }
+			.career-activity p { margin: 7px 0 0; color: var(--muted); font-size: 1rem; }
+			.career-activity { display: grid; grid-template-columns: minmax(130px, .34fr) 1fr; gap: 24px; margin-top: 24px; padding: 20px; background: var(--surface); }
+			.contact { display: grid; grid-template-columns: 1fr auto; align-items: end; gap: 30px; padding-block: 80px 68px; }
+			.contact h2 { max-width: 12ch; font-size: clamp(2.3rem, 5vw, 4rem); }
+			.contact p { max-width: 54ch; margin: 15px 0 0; color: var(--muted); }
+			.contact-action { display: flex; flex-direction: column; align-items: flex-start; gap: 9px; }
+			.contact-action small { color: var(--muted); font-size: .78rem; }
+			footer { display: flex; justify-content: space-between; gap: 20px; padding-block: 22px 30px; color: var(--muted); font: 400 .76rem var(--mono); }
+			footer p { margin: 0; }
+			@keyframes arrive { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+			.motion-ready .reveal { opacity: 0; transform: translateY(12px); transition: opacity .4s ease, transform .4s ease; }
+			.motion-ready .reveal.is-visible { opacity: 1; transform: none; }
+			@media (max-width: 850px) {
+				.wrap { width: min(100% - 48px, 700px); }
+				.nav-inner { gap: 18px; }
+				.nav-links { gap: 15px; }
+				.hero { min-height: auto; grid-template-columns: 1fr; gap: 42px; padding-block: 62px 76px; }
+				h1 { max-width: 12ch; font-size: clamp(4rem, 10vw, 5.8rem); }
+				.profile-file { width: min(100%, 580px); justify-self: end; }
+				.section-head, .about-layout, .career { grid-template-columns: 130px 1fr; gap: 22px; }
+				.skill-list { margin-left: 152px; }
+			}
+			@media (max-width: 620px) {
+				.wrap { width: calc(100% - 36px); }
+				.nav-inner { min-height: 65px; gap: 10px; }
+				.logo { font-size: .67rem; }
+				.nav-links { gap: 10px; font-size: .8rem; }
+				.nav-link-about { display: none; }
+				.nav-links li:nth-child(2) { display: none; }
+				.theme-toggle { min-width: 36px; min-height: 34px; padding: 0 8px; }
+				#theme-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; }
+				.hero { gap: 30px; padding-block: 42px 46px; }
+				.availability { margin-bottom: 20px; font-size: .74rem; }
+				.eyebrow { font-size: .76rem; }
+				h1 { max-width: 11ch; font-size: clamp(3.2rem, 14vw, 4.8rem); }
+				.lead { margin-block: 18px 23px; font-size: 1rem; }
+				.profile-file { width: 100%; }
+				.file-head { padding-inline: 14px; font-size: .72rem; }
+				.code { padding: 16px 12px 19px; font-size: .72rem; }
+				section { padding-block: 38px 28px; }
+				.section-head, .about-layout, .career { grid-template-columns: 1fr; gap: 12px; }
+				.section-head { margin-bottom: 22px; }
+				.about-layout .section-index { padding-top: 0; }
+				.skills { padding-top: 30px; padding-bottom: 22px; }
+				.skill-list { margin-left: 0; }
+				.skill-row { grid-template-columns: 1fr; gap: 10px; padding-block: 17px; }
+				.skill-items { gap: 8px; }
+				.skill-items span { padding: 6px 9px; font-size: .92rem; }
+				.project-list { grid-template-columns: 1fr; }
+				.project, .project:first-child { grid-template-columns: 1fr; min-height: 0; grid-row: auto; padding: 21px 0; }
+				.project:first-child { margin-bottom: 8px; padding: 22px; }
+				.project-kicker, .project h3, .project p { grid-column: 1; grid-row: auto; }
+				.project h3 { margin-top: 11px; }
+				.product-list { grid-template-columns: 1fr; margin-bottom: 34px; }
+				.product-row, .product-row-wide { grid-column: 1; grid-template-columns: minmax(90px, .42fr) 1fr; gap: 12px; }
+				.career-record { grid-template-columns: 1fr; gap: 8px; }
+				.career-activity { grid-template-columns: 1fr; gap: 8px; margin-top: 18px; padding: 17px; }
+				.contact { grid-template-columns: 1fr; align-items: start; gap: 24px; padding-block: 60px 44px; }
+				.contact h2 { max-width: 13ch; }
+				footer { flex-direction: column; gap: 6px; }
+			}
+			@media (max-width: 360px) {
+				.nav-inner { gap: 6px; }
+				.logo { font-size: .61rem; }
+				.nav-links { gap: 7px; font-size: .62rem; }
+				.nav-links li:nth-child(2) { display: none; }
+				.nav-links li:nth-child(4) { display: none; }
+			}
+			@media (prefers-reduced-motion: reduce) {
+				*, *::before, *::after { scroll-behavior: auto !important; animation: none !important; transition: none !important; }
+				.motion-ready .reveal { opacity: 1; transform: none; }
+			}
+		</style>
 	</head>
 	<body>
-		<h1>Astro</h1>
+		<nav aria-label="Navigasi utama">
+			<div class="nav-inner wrap">
+				<a class="logo" href="#top">nugraha<b>@</b>dev:~$</a>
+				<ul class="nav-links">
+					<li><a class="nav-link-about" href="#tentang">Tentang</a></li>
+					<li><a href="#keahlian">Keahlian</a></li>
+					<li><a href="#proyek">Proyek</a></li>
+					<li><a href="#pengalaman">Pengalaman</a></li>
+					<li><a href="#kontak">Kontak</a></li>
+				</ul>
+				<button class="theme-toggle" id="theme-toggle" type="button" aria-label="Aktifkan mode gelap" aria-pressed="false"><span class="theme-toggle-icon" id="theme-icon" aria-hidden="true"></span><span id="theme-label">Gelap</span></button>
+			</div>
+		</nav>
+
+		<main id="top" class="wrap">
+			<header class="hero">
+				<div class="hero-copy">
+					<p class="availability"><span class="availability-mark" aria-hidden="true"></span>Terbuka untuk peluang kerja</p>
+					<p class="eyebrow">Agung Nugraha / software engineer</p>
+					<h1>Backend<br /><span>engineer.</span></h1>
+					<p class="lead">Saya Nugraha, software engineer yang berfokus pada backend. Saya mengerjakan PHP, Golang, API, dan integrasi layanan, serta ikut menangani frontend saat dibutuhkan.</p>
+					<div class="hero-actions"><a class="button" href="#proyek">Lihat proyek</a><a class="text-link" href="#kontak">Hubungi saya</a></div>
+				</div>
+				<aside class="profile-file" aria-label="Ringkasan profil Nugraha dalam format JSON">
+					<div class="file-head"><span class="file-path"><span>src/</span>profile.json</span><span class="file-type">JSON</span></div>
+					<pre class="code" aria-label="name: Agung Nugraha, role: Software Engineer, focus: Backend and Web, skills: PHP, Golang, Git, open to work"><code>
+						<span class="code-line"><span class="line-number">01</span>{'{'}</span>
+						<span class="code-line"><span class="line-number">02</span>  <span class="code-key">"name"</span>: <span class="code-value">"Agung Nugraha"</span>,</span>
+						<span class="code-line"><span class="line-number">03</span>  <span class="code-key">"handle"</span>: <span class="code-value">"Nugraha"</span>,</span>
+						<span class="code-line"><span class="line-number">04</span>  <span class="code-key">"role"</span>: <span class="code-value">"Software Engineer"</span>,</span>
+						<span class="code-line"><span class="line-number">05</span>  <span class="code-key">"focus"</span>: [<span class="code-value">"Backend"</span>, <span class="code-value">"Web"</span>],</span>
+						<span class="code-line"><span class="line-number">06</span>  <span class="code-key">"stack"</span>: [<span class="code-value">"PHP"</span>, <span class="code-value">"Golang"</span>, <span class="code-value">"Git"</span>],</span>
+						<span class="code-line"><span class="line-number">07</span>  <span class="code-key">"openToWork"</span>: <span class="code-bool">true</span></span>
+						<span class="code-line"><span class="line-number">08</span>{'}'}</span>
+					</code></pre>
+				</aside>
+			</header>
+
+			<section id="tentang" class="about-layout reveal">
+				<p class="section-index">01 / Tentang</p>
+				<div><h2>Halo, saya Nugraha.</h2><p class="about-copy">Saya mengutamakan struktur yang mudah dibaca, alur data yang jelas, dan integrasi yang dapat ditelusuri. Fokus utama saya ada di <strong>backend engineering</strong>. Saya juga bisa membantu bagian frontend yang diperlukan.</p></div>
+			</section>
+
+			<section id="keahlian" class="skills reveal">
+				<div class="section-head"><p class="section-index">02 / Keahlian</p><div><h2>Perangkat kerja</h2><p class="section-intro">Saya merangkum bahasa, teknologi, dan kebiasaan kerja yang saya bawa ke tim engineering.</p></div></div>
+				<div class="skill-list">{skillGroups.map((group) => <div class="skill-row"><h3>{group.label}</h3><div class="skill-items">{group.items.map((item) => <span>{item}</span>)}</div></div>)}</div>
+			</section>
+
+			<section id="proyek" class="reveal">
+				<div class="section-head"><p class="section-index">03 / Proyek</p><div><h2>Produk dan proyek</h2><p class="section-intro">Produk dan proyek yang pernah saya tangani di iCube.</p></div></div>
+				<div class="product-list">{products.map((product) => <article class:list={['product-row', product.wide && 'product-row-wide']}><h3>{product.name}</h3>{product.detail && <p>{product.detail}</p>}</article>)}</div>
+				<div class="project-list">{projects.map((project, index) => <article class="project"><p class="project-kicker">{project.label} / 0{index + 1}</p><h3>{project.name}</h3></article>)}</div>
+			</section>
+
+			<section id="pengalaman" class="career reveal">
+				<p class="section-index">04 / Pengalaman</p>
+				<div><h2>Pengalaman kerja</h2><p class="section-intro">Perjalanan karier saya di iCube, dari backend engineering hingga software engineering.</p><div class="career-list">{experience.map((job) => <article class="career-record"><p class="career-period">{job.period}</p><div><h3>{job.role}</h3><p>{job.company}</p></div></article>)}</div><article class="career-activity"><p class="career-period">Kontribusi tambahan</p><div><h3>Mengisi training di Kawan Lama</h3><p>Berbagi pengetahuan melalui sesi training di Kawan Lama.</p></div></article></div>
+			</section>
+
+			<section id="kontak" class="contact reveal">
+				<div><p class="section-index">05 / Kontak</p><h2>Diskusikan peran backend bersama saya.</h2><p>Saya terbuka untuk peluang kerja sebagai software engineer, dengan fokus utama pada backend.</p></div>
+				<div class="contact-action"><a class="button" href="mailto:email@example.com">email@example.com</a><small>Ganti alamat contoh ini sebelum deploy.</small></div>
+			</section>
+		</main>
+
+		<footer class="wrap"><p>© {new Date().getFullYear()} Agung Nugraha</p><p>Dibuat dengan Astro</p></footer>
+		<script>
+			const themeToggle = document.querySelector<HTMLButtonElement>('#theme-toggle');
+			const themeLabel = document.querySelector<HTMLElement>('#theme-label');
+			const themeIcon = document.querySelector<HTMLElement>('#theme-icon');
+			const applyTheme = (theme: 'light' | 'dark') => {
+				document.documentElement.dataset.theme = theme;
+				const isDark = theme === 'dark';
+				themeToggle?.setAttribute('aria-pressed', String(isDark));
+				themeToggle?.setAttribute('aria-label', isDark ? 'Aktifkan mode terang' : 'Aktifkan mode gelap');
+				if (themeLabel) themeLabel.textContent = isDark ? 'Terang' : 'Gelap';
+				if (themeIcon) themeIcon.innerHTML = isDark
+					? '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/></svg>'
+					: '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.9 13A9 9 0 0 1 11 3.1 9 9 0 1 0 20.9 13Z"/></svg>';
+				document.querySelector('meta[name="theme-color"]')?.setAttribute('content', isDark ? '#111111' : '#F3EEE3');
+			};
+			themeToggle?.addEventListener('click', () => {
+				const nextTheme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+				applyTheme(nextTheme);
+				try { localStorage.setItem('nugraha-theme', nextTheme); } catch {}
+			});
+			applyTheme(document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light');
+
+			const revealElements = document.querySelectorAll<HTMLElement>('.reveal');
+			if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+				document.documentElement.classList.add('motion-ready');
+				const revealObserver = new IntersectionObserver((entries, observer) => {
+					for (const entry of entries) {
+						if (entry.isIntersecting) {
+							entry.target.classList.add('is-visible');
+							observer.unobserve(entry.target);
+						}
+					}
+				}, { threshold: 0.12 });
+				revealElements.forEach((element) => revealObserver.observe(element));
+			} else {
+				revealElements.forEach((element) => element.classList.add('is-visible'));
+			}
+		</script>
 	</body>
 </html>
