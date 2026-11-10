@@ -32,6 +32,7 @@ export default function ThemeToggle() {
       onClick={toggle}
     >
       <svg
+        className={`theme-icon ${dark ? "is-dark" : "is-light"}`}
         viewBox="0 0 24 24"
         width="18"
         height="18"

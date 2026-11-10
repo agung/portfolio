@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const commands = [
   "whoami",
@@ -26,6 +26,40 @@ const jobs = [
   "2020—2025 Software Engineer @ iCube by SIRCLO",
   "2025—Sekarang Software Engineer @ ICUBE",
 ];
+const TYPE_INTERVAL_MS = 18;
+
+function getStartupOutput(language) {
+  return [
+    {
+      command: "",
+      result: language === "en" ? "Last login: portfolio-web" : "Login terakhir: portfolio-web",
+    },
+    {
+      command: "help",
+      result:
+        language === "en"
+          ? "whoami — profile | ls projects/ — work | cat experience.log — career | curl /skills — stack | help — command list"
+          : "whoami — profil | ls projects/ — karya | cat experience.log — karier | curl /skills — keahlian | help — daftar perintah",
+    },
+  ];
+}
+
+function getTypedStartupOutput(language, characterCount) {
+  const [login, help] = getStartupOutput(language);
+  let remaining = characterCount;
+
+  if (remaining < login.result.length) {
+    return [{ ...login, result: login.result.slice(0, remaining) }];
+  }
+
+  remaining -= login.result.length;
+  if (remaining < help.command.length) {
+    return [login, { ...help, command: help.command.slice(0, remaining), result: "" }];
+  }
+
+  remaining -= help.command.length;
+  return [login, { ...help, result: help.result.slice(0, remaining) }];
+}
 
 export default function HeroTerminal() {
   const [language, setLanguage] = useState("id");
@@ -33,44 +67,85 @@ export default function HeroTerminal() {
   const [activeCommand, setActiveCommand] = useState("whoami");
   const [history, setHistory] = useState([]);
   const [historyIndex, setHistoryIndex] = useState(0);
-  const [output, setOutput] = useState([
-    { command: "", result: "Last login: portfolio-web" },
-    {
-      command: "help",
-      result:
-        "whoami — profile | ls projects/ — work | cat experience.log — career | curl /skills — stack | help — command list",
-    },
-  ]);
+  const [booting, setBooting] = useState(false);
+  const [typingProgress, setTypingProgress] = useState(null);
+  const [output, setOutput] = useState([]);
+  const typingTimer = useRef(null);
+  const outputRef = useRef(null);
+  const typingSequence = useRef(0);
+
+  useEffect(() => {
+    if (outputRef.current) {
+      outputRef.current.scrollTop = outputRef.current.scrollHeight;
+    }
+  }, [output]);
 
   useEffect(() => {
     const initialLanguage = document.documentElement.dataset.language || "id";
     setLanguage(initialLanguage);
-    setOutput([
-      { command: "", result: initialLanguage === "en" ? "Last login: portfolio-web" : "Login terakhir: portfolio-web" },
-      {
-        command: "help",
-        result: initialLanguage === "en"
-          ? "whoami — profile | ls projects/ — work | cat experience.log — career | curl /skills — stack | help — command list"
-          : "whoami — profil | ls projects/ — karya | cat experience.log — karier | curl /skills — keahlian | help — daftar perintah",
-      },
-    ]);
+    const startupOutput = getStartupOutput(initialLanguage);
+    const fullTextLength = startupOutput.reduce(
+      (total, item) => total + item.command.length + item.result.length,
+      0,
+    );
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setOutput(startupOutput);
+    } else {
+      setBooting(true);
+      setOutput([]);
+      let characterCount = 0;
+      const sequence = ++typingSequence.current;
+      typingTimer.current = window.setInterval(() => {
+        if (sequence !== typingSequence.current) return;
+        characterCount += 1;
+        const partialOutput = getTypedStartupOutput(initialLanguage, characterCount);
+        setOutput((items) =>
+          sequence === typingSequence.current ? partialOutput : items,
+        );
+        if (characterCount >= fullTextLength) {
+          window.clearInterval(typingTimer.current);
+          typingTimer.current = null;
+          setOutput((items) =>
+            sequence === typingSequence.current ? startupOutput : items,
+          );
+          setBooting((current) =>
+            sequence === typingSequence.current ? false : current,
+          );
+        }
+      }, TYPE_INTERVAL_MS);
+    }
+
     const updateLanguage = (event) => {
+      typingSequence.current += 1;
+      if (typingTimer.current) {
+        window.clearInterval(typingTimer.current);
+        typingTimer.current = null;
+      }
+      setBooting(false);
+      setTypingProgress(null);
       setLanguage(event.detail);
-      setOutput([
-        { command: "", result: event.detail === "en" ? "Last login: portfolio-web" : "Login terakhir: portfolio-web" },
-        {
-          command: "help",
-          result: event.detail === "en"
-            ? "whoami — profile | ls projects/ — work | cat experience.log — career | curl /skills — stack | help — command list"
-            : "whoami — profil | ls projects/ — karya | cat experience.log — karier | curl /skills — keahlian | help — daftar perintah",
-        },
-      ]);
+      setOutput(getStartupOutput(event.detail));
     };
     window.addEventListener("portfolio-language", updateLanguage);
-    return () => window.removeEventListener("portfolio-language", updateLanguage);
+    return () => {
+      if (typingTimer.current) window.clearInterval(typingTimer.current);
+      window.removeEventListener("portfolio-language", updateLanguage);
+    };
   }, []);
 
-  function run(raw) {
+  function stopTyping() {
+    typingSequence.current += 1;
+    if (typingTimer.current) {
+      window.clearInterval(typingTimer.current);
+      typingTimer.current = null;
+    }
+    setTypingProgress(null);
+  }
+
+  function run(raw, animate = false) {
+    stopTyping();
+    setBooting(false);
     const command = raw.trim();
     if (!command) return;
     if (command === "clear") {
@@ -90,15 +165,36 @@ export default function HeroTerminal() {
       "curl /skills": skills.join(" · "),
       help: `Commands: ${commands.join(" | ")}`,
     };
-    setOutput((items) => [
-      ...items,
-      {
-        command,
-        result:
-          responses[command] ||
-          (language === "en" ? "Unknown command. Type help to see available commands." : "Perintah tidak dikenal. Ketik help untuk melihat daftar perintah."),
-      },
-    ]);
+    const result = responses[command] ||
+      (language === "en" ? "Unknown command. Type help to see available commands." : "Perintah tidak dikenal. Ketik help untuk melihat daftar perintah.");
+    const shouldAnimate = animate && !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (shouldAnimate) {
+      const itemIndex = output.length;
+      setOutput((items) => [...items, { command, result }]);
+      setTypingProgress({ index: itemIndex, characters: 0 });
+      let characterCount = 0;
+      const totalCharacters = command.length + result.length;
+      const sequence = typingSequence.current;
+      typingTimer.current = window.setInterval(() => {
+        if (sequence !== typingSequence.current) return;
+        characterCount += 1;
+        const complete = characterCount >= totalCharacters;
+        setTypingProgress((current) =>
+          sequence === typingSequence.current
+            ? complete
+              ? null
+              : { index: itemIndex, characters: characterCount }
+            : current,
+        );
+        if (complete) {
+          window.clearInterval(typingTimer.current);
+          typingTimer.current = null;
+        }
+      }, TYPE_INTERVAL_MS);
+    } else {
+      setOutput((items) => [...items, { command, result }]);
+    }
     setHistory((items) => [...items, command]);
     setHistoryIndex(history.length + 1);
     setValue("");
@@ -143,7 +239,7 @@ export default function HeroTerminal() {
                 aria-pressed={activeCommand === command}
                 onClick={() => {
                   setActiveCommand(command);
-                  run(command);
+                  run(command, true);
                 }}
               >
                 {command}
@@ -156,15 +252,31 @@ export default function HeroTerminal() {
           <span>portfolio-shell — {language === "en" ? "interactive" : "interaktif"}</span>
           <span>{language === "en" ? "session active" : "sesi aktif"}</span>
         </div>
-        <div className="terminal-output" aria-live="polite">
+        <div ref={outputRef} className="terminal-output" aria-live={booting || typingProgress ? "off" : "polite"}>
           {output.map((item, index) => (
-            <div key={`${index}-${item.command}`}>
-              {item.command && (
+            <div key={index}>
+              {(() => {
+                const isTypingThisItem = typingProgress?.index === index;
+                const visibleCharacters = isTypingThisItem ? typingProgress.characters : Infinity;
+                const visibleCommand = item.command.slice(0, Math.min(visibleCharacters, item.command.length));
+                const visibleResult = isTypingThisItem
+                  ? item.result.slice(
+                      0,
+                      Math.max(0, visibleCharacters - item.command.length),
+                    )
+                  : item.result;
+
+                return (
+                  <>
+              {(visibleCommand || isTypingThisItem) && (
                 <p>
-                  <span className="prompt">nugraha@dev:~$</span> {item.command}
+                  <span className="prompt">nugraha@dev:~$</span> {visibleCommand}
                 </p>
               )}
-              <p className="response">{item.result}</p>
+              <p className="response">{visibleResult}</p>
+                  </>
+                );
+              })()}
             </div>
           ))}
         </div>

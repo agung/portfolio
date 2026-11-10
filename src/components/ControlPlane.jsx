@@ -49,9 +49,67 @@ const responseData = {
 };
 const marketplaces = ["Shopee", "TikTok", "Lazada", "Blibli", "Shopify"];
 
+function HighlightedJson({ value }) {
+  const pattern = /"(?:\\.|[^"\\])*"|-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?|\b(?:true|false|null)\b|[{}\[\],:]|\s+|./gs;
+  const tokens = [...value.matchAll(pattern)];
+
+  return (
+    <>
+      {tokens.map((token, index) => {
+        const text = token[0];
+        let type = "punctuation";
+
+        if (text.startsWith('"')) {
+          type = /^\s*:/.test(value.slice(token.index + text.length))
+            ? "key"
+            : "string";
+        } else if (/^-?\d/.test(text)) {
+          type = "number";
+        } else if (/^(true|false|null)$/.test(text)) {
+          type = "literal";
+        } else if (/^\s+$/.test(text)) {
+          return text;
+        }
+
+        return (
+          <span className={`json-${type}`} key={`${index}-${token.index}`}>
+            {text}
+          </span>
+        );
+      })}
+    </>
+  );
+}
+
+function getResponseText(endpoint, language) {
+  const payload =
+    endpoint === "experience"
+      ? {
+          ...responseData.experience,
+          roles: responseData.experience.roles.map((job) => ({
+            ...job,
+            period:
+              language === "en"
+                ? job.period.replace("Sekarang", "Present")
+                : job.period,
+          })),
+          contribution:
+            language === "en" ? "Trainer at Kawan Lama" : "Trainer di Kawan Lama",
+        }
+      : endpoint === "contact"
+        ? {
+            ...responseData.contact,
+            status: language === "en" ? "Contact email" : "Email kontak",
+          }
+        : responseData[endpoint];
+
+  return JSON.stringify(payload, null, 2);
+}
+
 function ApiView({ language }) {
   const [expanded, setExpanded] = useState("about");
   const [response, setResponse] = useState(null);
+  const [requesting, setRequesting] = useState(null);
   return (
     <div className="view active">
       <div className="view-head">
@@ -62,8 +120,12 @@ function ApiView({ language }) {
         <span className="tag">BASE /api/v1</span>
       </div>
       <div>
-        {endpoints.map((endpoint) => (
-          <details
+        {endpoints.map((endpoint) => {
+          const responseText =
+            response === endpoint ? getResponseText(endpoint, language) : null;
+
+          return (
+            <details
             key={endpoint}
             className="endpoint"
             open={expanded === endpoint}
@@ -98,34 +160,34 @@ function ApiView({ language }) {
                 <button
                   className="try"
                   type="button"
-                  onClick={() => setResponse(endpoint)}
+                  onClick={() => {
+                    setRequesting(endpoint);
+                    window.setTimeout(() => {
+                      setResponse(endpoint);
+                      setRequesting(null);
+                    }, 360);
+                  }}
                 >
-                  {language === "en" ? "Try it out" : "Coba endpoint"}
+                  {requesting === endpoint
+                    ? language === "en" ? "Requesting…" : "Meminta…"
+                    : language === "en" ? "Try it out" : "Coba endpoint"}
                 </button>
               </div>
               <pre className="json">
-                {response === endpoint
-                  ? JSON.stringify(
-                      endpoint === "experience"
-                        ? {
-                            ...responseData.experience,
-                            roles: responseData.experience.roles.map((job) => ({
-                              ...job,
-                              period: language === "en" ? job.period.replace("Sekarang", "Present") : job.period,
-                            })),
-                            contribution: language === "en" ? "Trainer at Kawan Lama" : "Trainer di Kawan Lama",
-                          }
-                        : endpoint === "contact"
-                          ? { ...responseData.contact, status: language === "en" ? "Contact email" : "Email kontak" }
-                          : responseData[endpoint],
-                      null,
-                      2,
-                    )
-                  : (language === "en" ? "Run Try it out to display the response." : "Tekan Coba endpoint untuk menampilkan response.")}
+                {requesting === endpoint ? (
+                  <span className="request-status">HTTP/1.1 · {language === "en" ? "SENDING REQUEST" : "MENGIRIM REQUEST"}</span>
+                ) : responseText ? (
+                  <HighlightedJson value={responseText} />
+                ) : (
+                  language === "en"
+                    ? "Run Try it out to display the response."
+                    : "Tekan Coba endpoint untuk menampilkan response."
+                )}
               </pre>
             </div>
-          </details>
-        ))}
+            </details>
+          );
+        })}
       </div>
     </div>
   );
@@ -208,7 +270,7 @@ function MapView({ language }) {
         </div>
       </div>
       <div className="map-layout">
-        <div className="map-canvas">
+        <div className={`map-canvas ${selected !== "Marketplace Adapter" ? "has-selection" : ""}`}>
           <div className="flow-source">
           <span className="flow-label">{language === "en" ? "INTEGRATION LAYER" : "LAPISAN INTEGRASI"}</span>
             <button
@@ -275,7 +337,7 @@ function LogsView({ language }) {
         </div>
       </div>
       {jobs.map((job, index) => (
-        <article key={job.period} className="log-row">
+        <article key={job.period} className={`log-row log-row-${index + 1}`}>
           <time>{language === "en" ? job.period.replace("Sekarang", "Present") : job.period}</time>
             <span className="meta">
             [{index === 2 ? (language === "en" ? "ACTIVE" : "AKTIF") : index === 0 ? (language === "en" ? "START" : "MULAI") : (language === "en" ? "LEVEL" : "LANJUTAN")}]
@@ -286,7 +348,7 @@ function LogsView({ language }) {
           </div>
         </article>
       ))}
-      <article className="log-row">
+      <article className="log-row log-row-4">
         <time>{language === "en" ? "FIELD NOTE" : "CATATAN"}</time>
         <span>[SHARE]</span>
         <div>
@@ -338,8 +400,13 @@ export default function ControlPlane() {
   useEffect(() => {
     setLanguage(document.documentElement.dataset.language || "id");
     const updateLanguage = (event) => setLanguage(event.detail);
+    const openCareerLog = () => setActive("logs");
     window.addEventListener("portfolio-language", updateLanguage);
-    return () => window.removeEventListener("portfolio-language", updateLanguage);
+    window.addEventListener("portfolio-open-career-log", openCareerLog);
+    return () => {
+      window.removeEventListener("portfolio-language", updateLanguage);
+      window.removeEventListener("portfolio-open-career-log", openCareerLog);
+    };
   }, []);
   const labels = language === "en"
     ? [["API Explorer", "request / response"], ["Telemetry", "demo signals"], ["System Map", "product context"], ["Career Log", "timeline / notes"]]
