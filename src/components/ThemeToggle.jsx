@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { flushSync } from "react-dom";
 
 export default function ThemeToggle() {
   const [dark, setDark] = useState(false);
@@ -14,14 +15,51 @@ export default function ThemeToggle() {
   const toggleLabel = dark
     ? language === "en" ? "Switch to light mode" : "Aktifkan mode terang"
     : language === "en" ? "Switch to dark mode" : "Aktifkan mode gelap";
-  function toggle() {
+  function toggle(event) {
     const next = !dark;
-    setDark(next);
-    if (next) document.documentElement.dataset.theme = "dark";
-    else delete document.documentElement.dataset.theme;
+    const root = document.documentElement;
+    const applyTheme = () => {
+      flushSync(() => setDark(next));
+      if (next) root.dataset.theme = "dark";
+      else delete root.dataset.theme;
+      try {
+        localStorage.setItem("nugraha-theme", next ? "dark" : "light");
+      } catch {}
+    };
+
+    const transition = document.startViewTransition;
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (typeof transition !== "function" || reducedMotion) {
+      applyTheme();
+      return;
+    }
+
+    const buttonBounds = event.currentTarget.getBoundingClientRect();
+    const x = buttonBounds.left + buttonBounds.width / 2;
+    const y = buttonBounds.top + buttonBounds.height / 2;
+    const radius = Math.hypot(
+      Math.max(x, window.innerWidth - x),
+      Math.max(y, window.innerHeight - y),
+    );
+
+    root.style.setProperty("--theme-origin-x", `${x}px`);
+    root.style.setProperty("--theme-origin-y", `${y}px`);
+    root.style.setProperty("--theme-radius", `${radius}px`);
+    root.dataset.themeMotion = next ? "expand" : "collapse";
+
+    const cleanup = () => {
+      delete root.dataset.themeMotion;
+      root.style.removeProperty("--theme-origin-x");
+      root.style.removeProperty("--theme-origin-y");
+      root.style.removeProperty("--theme-radius");
+    };
+
     try {
-      localStorage.setItem("nugraha-theme", next ? "dark" : "light");
-    } catch {}
+      transition.call(document, applyTheme).finished.finally(cleanup);
+    } catch {
+      cleanup();
+      applyTheme();
+    }
   }
   return (
     <button

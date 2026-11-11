@@ -1,0 +1,32 @@
+---
+import { getCollection, render } from "astro:content";
+import BlogLayout from "../../layouts/BlogLayout.astro";
+
+export async function getStaticPaths() {
+	return (await getCollection("blog")).map((post) => ({
+		params: { slug: post.id },
+		props: { post },
+	}));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+const date = post.data.pubDate.toLocaleDateString("id-ID", {
+	day: "2-digit",
+	month: "long",
+	year: "numeric",
+});
+---
+
+<BlogLayout title={post.data.title} description={post.data.description}>
+	<article class="blog-page blog-article">
+		<a class="blog-back" href="/blog/">← Semua tulisan</a>
+		<h1>{post.data.title}</h1>
+		<p class="blog-meta">
+			<time datetime={post.data.pubDate.toISOString()}>{date}</time>
+			<span>Agung Nugraha</span>
+		</p>
+		<span class="blog-category">{post.data.category}</span>
+		<div class="blog-content"><Content /></div>
+	</article>
+</BlogLayout>

@@ -1,10 +1,49 @@
 ---
-const projects = ["Hushpuppies", "ACE & Informa", "OMS support"];
-const products = ["OMS", "PIM", "Affiliate", "Journal", "Marketplace Adapter", "Belanjaku"];
-const jobs = [
-	{ period: "2019—2020", role: "Junior Backend Engineer", company: "ICUBE" },
-	{ period: "2020—2025", role: "Software Engineer", company: "iCube by SIRCLO" },
-	{ period: "2025—Sekarang", role: "Software Engineer", company: "ICUBE" },
+const projects = [
+	{
+		label: "PROJECT / CLIENT",
+		title: "Hushpuppies",
+		idDescription: "Salah satu project klien yang pernah saya tangani selama bekerja di ICUBE.",
+		enDescription: "A client project I handled while working at ICUBE.",
+		tag: "Client project",
+	},
+	{
+		label: "KAWAN LAMA GROUP",
+		title: "ACE & Informa",
+		idDescription: "Project untuk brand di bawah Kawan Lama Group.",
+		enDescription: "A project for brands within Kawan Lama Group.",
+		tag: "Retail",
+	},
+	{
+		label: "SUPPORT PROJECT",
+		title: "OMS support",
+		idDescription: "Dukungan project untuk Omnichannel Management System.",
+		enDescription: "Project support for an Omnichannel Management System.",
+		tag: "OMS",
+	},
+];
+const focusAreas = [
+	{
+		label: "PRODUCTS",
+		idTitle: "Produk yang pernah ditangani",
+		enTitle: "Products I’ve worked on",
+		idBody: "OMS · PIM · Affiliate · Journal · Marketplace Adapter · Belanjaku",
+		enBody: "OMS · PIM · Affiliate · Journal · Marketplace Adapter · Belanjaku",
+	},
+	{
+		label: "INTEGRATIONS",
+		idTitle: "Kanal marketplace",
+		enTitle: "Marketplace channels",
+		idBody: "Shopee · TikTok · Lazada · Blibli · Shopify",
+		enBody: "Shopee · TikTok · Lazada · Blibli · Shopify",
+	},
+	{
+		label: "KNOWLEDGE SHARING",
+		idTitle: "Trainer di Kawan Lama",
+		enTitle: "Trainer at Kawan Lama",
+		idBody: "Mengisi training untuk tim Kawan Lama.",
+		enBody: "Delivered training for the Kawan Lama team.",
+	},
 ];
 import SiteHeader from "../components/SiteHeader.astro";
 import HeroTerminal from "../components/HeroTerminal.jsx";
@@ -51,26 +90,45 @@ import PortfolioStyles from "../components/PortfolioStyles.astro";
       <HeroTerminal client:load />
       <ControlPlane client:load />
       <section id="projects" class="wrap project-section">
-        <div class="section-heading">
+        <div class="work-heading">
           <div>
-            <p class="meta">ls projects/ --handled</p><h2><span class="lang-id">Pekerjaan yang mendukung operasional nyata.</span><span class="lang-en">Work connected to real operations.</span></h2>
+            <p class="eyebrow">ls projects/ --handled</p>
+            <h2><span class="lang-id">Project yang pernah saya tangani.</span><span class="lang-en">Work I’ve handled.</span></h2>
           </div>
-        </div>{
-          projects.map((project, index) => (
+          <p class="lead"><span class="lang-id">Pengalaman di platform commerce, sistem omnichannel, dan dukungan produk.</span><span class="lang-en">Experience across commerce platforms, omnichannel systems, and product support.</span></p>
+        </div>
+        <div class="project-list">
+          {projects.map((project) => (
             <article class="project-row">
-              <>
-                <p>
-                  {index === 1
-                    ? "KAWAN LAMA GROUP"
-                    : index === 2
-                      ? "SUPPORT PROJECT"
-                      : "PROJECT / CLIENT"}
-                </p>
-                <h3>{project}</h3>
-              </>
+              <p class="project-label">{project.label}</p>
+              <h3>{project.title}</h3>
+              <div class="project-description">
+                <p><span class="lang-id">{project.idDescription}</span><span class="lang-en">{project.enDescription}</span></p>
+                <span class="project-tag">{project.tag}</span>
+              </div>
             </article>
-          ))
-        }
+          ))}
+        </div>
+      </section>
+      <section class="focus-section">
+        <div class="wrap">
+          <div class="focus-heading">
+            <div>
+              <p class="eyebrow">/engineering/surface</p>
+              <h2><span class="lang-id">Sistem, kanal, dan tim.</span><span class="lang-en">Systems, channels, and teams.</span></h2>
+            </div>
+            <p class="lead"><span class="lang-id">Area kerja yang menghubungkan backend dengan operasional produk.</span><span class="lang-en">Work that connects backend systems with product operations.</span></p>
+          </div>
+          <div class="focus-grid">
+            {focusAreas.map((area, index) => (
+              <article class={`focus-card focus-card-${index + 1}`}>
+                <p class="focus-label">0{index + 1} / {area.label}</p>
+                <h3><span class="lang-id">{area.idTitle}</span><span class="lang-en">{area.enTitle}</span></h3>
+                <p><span class="lang-id">{area.idBody}</span><span class="lang-en">{area.enBody}</span></p>
+              </article>
+            ))}
+          </div>
+        </div>
       </section>
       <section id="contact" class="contact">
         <div class="wrap contact-inner">
@@ -86,11 +144,14 @@ import PortfolioStyles from "../components/PortfolioStyles.astro";
           </div>
         </div>
       </section>
-    </main><footer class="wrap">
-      © {new Date().getFullYear()} Agung Nugraha <span style="float:right"
-        ><span class="lang-id">dibangun sebagai control plane backend</span><span class="lang-en">built as a backend control plane</span></span
-      >
-    </footer>
+    </main>
+    <footer class="wrap">
+      <span>© {new Date().getFullYear()} Agung Nugraha</span>
+      <span class="footer-credit">
+        <span class="lang-id">Dibuat dengan Astro</span>
+        <span class="lang-en">Built with Astro</span>
+      </span>
+		</footer>
 
   </body>
 </html>

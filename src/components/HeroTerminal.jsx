@@ -222,12 +222,20 @@ export default function HeroTerminal() {
     <section id="console" className="wrap hero">
       <div>
         <p className="eyebrow">HTTP/1.1 200 AVAILABLE</p>
-        <h1>{language === "en" ? "I build the layer behind the interface." : "Saya membangun sistem di balik antarmuka."}</h1>
+        <h1>{language === "en" ? "I build backend systems that move real work." : "Saya membangun backend yang menggerakkan operasional."}</h1>
         <p className="lead">
           {language === "en"
-            ? "I’m Nugraha, a software engineer focused on backend systems. I build APIs, marketplace integrations, and the systems that connect products to day-to-day operations."
-            : "Saya Nugraha, software engineer dengan fokus backend. Saya menangani API, integrasi marketplace, dan sistem yang menghubungkan produk dengan operasional sehari-hari."}
+            ? "I’m Agung Nugraha, a software engineer focused on backend engineering. I work on APIs, marketplace integrations, and the product workflows connected to them."
+            : "Saya Agung Nugraha, software engineer dengan fokus pada backend. Saya menangani API, integrasi marketplace, dan alur produk yang terhubung dengannya."}
         </p>
+        <div className="hero-proof">
+          <strong className="experience-years">8+</strong>
+          <span>
+            {language === "en"
+              ? "years of software engineering experience"
+              : "tahun pengalaman software engineering"}
+          </span>
+        </div>
         <div className="chips">
           {commands
             .slice(0, 2)

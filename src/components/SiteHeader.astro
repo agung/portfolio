@@ -2,16 +2,25 @@
 import ThemeToggle from "./ThemeToggle.jsx";
 import LanguageToggle from "./LanguageToggle.jsx";
 import CareerNavLink from "./CareerNavLink.jsx";
+const { isHome = true } = Astro.props;
 ---
 <header>
 	<div class="wrap top">
-		<a class="brand" href="#top">nugraha<b>@</b>dev:~$</a>
-		<span class="open"><span class="lang-id">Terbuka untuk peluang kerja</span><span class="lang-en">Open to work</span></span>
-		<nav><a href="#console"><span class="lang-id">Konsol</span><span class="lang-en">Console</span></a><a href="#control-plane">Control plane</a><CareerNavLink client:load /></nav>
+		<div class="header-identity">
+			<a class="brand" href={isHome ? "#top" : "/"}>nugraha<b>@</b>dev:~$</a>
+			<span class="open"><span class="lang-id">Terbuka untuk peluang kerja</span><span class="lang-en">Open to work</span></span>
+		</div>
+		<nav aria-label="Main navigation">
+			<a href={isHome ? "#console" : "/#console"}><span class="lang-id">Konsol</span><span class="lang-en">Console</span></a>
+			<a href={isHome ? "#control-plane" : "/#control-plane"}>Control plane</a>
+			<a href={isHome ? "#projects" : "/#projects"}><span class="lang-id">Karya</span><span class="lang-en">Work</span></a>
+			<CareerNavLink client:load isHome={isHome} />
+			<a href="/blog/">Blog</a>
+		</nav>
 		<div class="header-actions">
 			<LanguageToggle client:load />
 			<ThemeToggle client:load />
-			<a class="contact-link" href="#contact">POST /contact</a>
+			<a class="contact-link" href={isHome ? "#contact" : "/#contact"}>POST /contact</a>
 		</div>
 	</div>
 </header>
