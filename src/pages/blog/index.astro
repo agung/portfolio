@@ -1,0 +1,44 @@
+---
+import { getCollection } from "astro:content";
+import BlogLayout from "../../layouts/BlogLayout.astro";
+
+const posts = (await getCollection("blog")).sort(
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+---
+
+<BlogLayout
+	title="Blog"
+	description="Catatan Agung Nugraha tentang backend engineering, API, dan perangkat lunak."
+>
+	<section class="blog-page">
+		<p class="blog-kicker">/var/log/notes</p>
+		<h1>Catatan tentang backend dan perangkat lunak.</h1>
+		<p class="blog-intro">Tulisan teknis dan catatan kerja dari Agung Nugraha.</p>
+
+		<div class="blog-list" aria-label="Daftar artikel">
+			{posts.length ? (
+				posts.map((post) => (
+					<a class="blog-entry" href={`/blog/${post.id}/`}>
+						<div class="blog-meta">
+							<time datetime={post.data.pubDate.toISOString()}>
+								{post.data.pubDate.toLocaleDateString("id-ID", {
+									day: "2-digit",
+									month: "short",
+									year: "numeric",
+								})}
+							</time>
+						</div>
+						<div>
+							<h2>{post.data.title}</h2>
+							<p>{post.data.description}</p>
+							<span class="blog-category">{post.data.category}</span>
+						</div>
+					</a>
+				))
+			) : (
+				<p class="blog-empty">Belum ada artikel. Tulisan baru akan muncul di sini.</p>
+			)}
+		</div>
+	</section>
+</BlogLayout>
